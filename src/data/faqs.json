@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "question": "How fresh is the milk?",
+    "answer": "Our milk is delivered fresh daily from our farm. We ensure that the milk reaches you within hours of milking, maintaining its natural freshness and nutritional value."
+  },
+  {
+    "id": 2,
+    "question": "Why glass bottles instead of plastic?",
+    "answer": "Glass bottles are safer, more hygienic, and environmentally friendly. They don't leach chemicals, preserve the milk's natural taste, and can be reused, reducing waste."
+  },
+  {
+    "id": 3,
+    "question": "How do I return the empty bottles?",
+    "answer": "Simply leave the empty bottles at your doorstep on your next delivery day. Our delivery person will collect them. For weekly subscriptions, bottles are collected weekly; monthly subscriptions are collected monthly."
+  },
+  {
+    "id": 4,
+    "question": "What are the membership benefits?",
+    "answer": "Memberships offer discounts (5% weekly, 10% monthly, 15% yearly), loyalty points on every purchase, priority delivery, and exclusive access to premium products."
+  },
+  {
+    "id": 5,
+    "question": "How do loyalty points work?",
+    "answer": "First-time customers earn 15% loyalty points (10% bonus + 5% regular). Returning customers earn 5% points on every purchase. Points accumulate and can be redeemed for discounts and rewards."
+  },
+  {
+    "id": 6,
+    "question": "What is the delivery time?",
+    "answer": "We offer fast delivery within your area. Delivery times vary by location, but we strive to deliver fresh milk early in the morning to ensure maximum freshness."
+  },
+  {
+    "id": 7,
+    "question": "Can I cancel my subscription?",
+    "answer": "Yes, you can cancel your subscription at any time. Simply contact us via WhatsApp at +91 9600642226, and we'll process your cancellation."
+  },
+  {
+    "id": 8,
+    "question": "Is the milk organic and certified?",
+    "answer": "Yes, our milk comes from organically raised cows with no artificial hormones or antibiotics. We maintain strict quality standards and regular lab testing to ensure purity and safety."
+  },
+  {
+    "id": 9,
+    "question": "What payment methods do you accept?",
+    "answer": "Currently, we accept cash on delivery and payments via WhatsApp. We're working on adding more digital payment options soon."
+  },
+  {
+    "id": 10,
+    "question": "What if I'm not satisfied with my order?",
+    "answer": "Your satisfaction is our priority. If you have any concerns about your order, please contact us immediately via WhatsApp at +91 9600642226, and we'll resolve the issue promptly."
+  }
+]

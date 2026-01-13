@@ -1,0 +1,84 @@
+{
+  "certifications": [
+    {
+      "id": 1,
+      "name": "Organic Certification",
+      "issuer": "Organic Certification Board",
+      "validUntil": "2025-12-31",
+      "description": "Certified organic dairy products with no artificial additives"
+    },
+    {
+      "id": 2,
+      "name": "FSSAI License",
+      "issuer": "Food Safety and Standards Authority of India",
+      "validUntil": "2026-06-30",
+      "description": "Compliant with all food safety standards"
+    },
+    {
+      "id": 3,
+      "name": "Quality Assurance Certificate",
+      "issuer": "Dairy Quality Control Board",
+      "validUntil": "2025-12-31",
+      "description": "Regular quality testing and assurance"
+    }
+  ],
+  "monthlyReports": [
+    {
+      "month": 12,
+      "year": 2024,
+      "testDate": "2024-12-15",
+      "parameters": {
+        "fat": { "value": 4.2, "unit": "%", "standard": "≥3.5%", "status": "pass" },
+        "protein": { "value": 3.4, "unit": "%", "standard": "≥3.0%", "status": "pass" },
+        "lactose": { "value": 4.8, "unit": "%", "standard": "≥4.5%", "status": "pass" },
+        "solids": { "value": 12.5, "unit": "%", "standard": "≥11.5%", "status": "pass" },
+        "bacterialCount": { "value": 5000, "unit": "CFU/ml", "standard": "<100000", "status": "pass" },
+        "antibiotics": { "value": "Not Detected", "unit": "", "standard": "None", "status": "pass" },
+        "pesticides": { "value": "Not Detected", "unit": "", "standard": "None", "status": "pass" },
+        "adulteration": { "value": "None", "unit": "", "standard": "None", "status": "pass" }
+      },
+      "overallStatus": "pass",
+      "labName": "National Dairy Testing Laboratory"
+    },
+    {
+      "month": 11,
+      "year": 2024,
+      "testDate": "2024-11-15",
+      "parameters": {
+        "fat": { "value": 4.1, "unit": "%", "standard": "≥3.5%", "status": "pass" },
+        "protein": { "value": 3.3, "unit": "%", "standard": "≥3.0%", "status": "pass" },
+        "lactose": { "value": 4.7, "unit": "%", "standard": "≥4.5%", "status": "pass" },
+        "solids": { "value": 12.4, "unit": "%", "standard": "≥11.5%", "status": "pass" },
+        "bacterialCount": { "value": 4500, "unit": "CFU/ml", "standard": "<100000", "status": "pass" },
+        "antibiotics": { "value": "Not Detected", "unit": "", "standard": "None", "status": "pass" },
+        "pesticides": { "value": "Not Detected", "unit": "", "standard": "None", "status": "pass" },
+        "adulteration": { "value": "None", "unit": "", "standard": "None", "status": "pass" }
+      },
+      "overallStatus": "pass",
+      "labName": "National Dairy Testing Laboratory"
+    }
+  ],
+  "glassBottleSafety": {
+    "material": "Borosilicate Glass",
+    "thickness": "3mm",
+    "safetyFeatures": [
+      "Heat-resistant up to 400°C",
+      "Non-reactive with milk",
+      "BPA-free and chemical-free",
+      "Reusable and recyclable",
+      "Maintains milk freshness"
+    ],
+    "cleaningProcess": [
+      "High-temperature sterilization",
+      "Food-grade sanitizer wash",
+      "Rinse with purified water",
+      "Quality inspection",
+      "Sealed packaging"
+    ],
+    "certifications": [
+      "ISO 9001:2015",
+      "Food Grade Glass Standard",
+      "BIS Certified"
+    ]
+  }
+}
