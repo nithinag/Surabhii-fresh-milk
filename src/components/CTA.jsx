@@ -1,18 +1,34 @@
+import { openWhatsApp } from '../utils/whatsappUtils';
+
 const CTA = () => {
   const handleWhatsAppClick = () => {
-    const message = `Hello! I'm interested in ordering fresh organic milk from Surabhii Fresh Milk.`;
-    const whatsappUrl = `https://wa.me/9600642226?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const message = `Hello Surabhii Fresh Milk 🥛
+I’d like to order fresh cow milk.
+Please share today’s availability and pricing.`;
+    openWhatsApp(message);
   };
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-r from-primary-green to-secondary-green">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section id="cta" className="scroll-mt-0 md:scroll-mt-0 min-h-screen flex items-center pt-4 pb-12 md:pt-8 md:pb-16 lg:pt-10 lg:pb-20 bg-gradient-to-r from-primary-green to-secondary-green">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-12 text-center">
+        <div className="inline-block mb-4">
+          <button
+            onClick={() => {
+              const element = document.getElementById('cta');
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }}
+            className="text-sm sm:text-base font-semibold text-white uppercase tracking-wider bg-white/20 hover:bg-white/30 active:bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full transition-all duration-200 cursor-pointer"
+          >
+            Ready to Order
+          </button>
+        </div>
         <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
           Ready to Experience Freshness?
         </h2>
         <p className="text-xl text-white/90 mb-8">
-          Join thousands of satisfied customers. Order now and get fresh organic milk delivered to your doorstep.
+          Join thousands of satisfied customers. Order now and get fresh and pure milk delivered to your doorstep.
         </p>
         <button
           onClick={handleWhatsAppClick}

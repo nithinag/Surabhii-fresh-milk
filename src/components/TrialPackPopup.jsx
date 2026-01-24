@@ -58,7 +58,7 @@ const TrialPackPopup = ({ onGetStarted }) => {
               3-Day Trial Pack
             </h4>
             <p className="text-charcoal/70 text-sm mb-4">
-              Try our premium organic milk for 3 days with 20% discount!
+              Try our premium fresh and pure milk for 3 days with 20% discount!
             </p>
           </div>
 

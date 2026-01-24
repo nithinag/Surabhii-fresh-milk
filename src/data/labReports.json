@@ -2,10 +2,10 @@
   "certifications": [
     {
       "id": 1,
-      "name": "Organic Certification",
-      "issuer": "Organic Certification Board",
+      "name": "Surabhii Certification",
+      "issuer": "Dairy Quality Certification Board",
       "validUntil": "2025-12-31",
-      "description": "Certified organic dairy products with no artificial additives"
+      "description": "Certified fresh and pure dairy products with no artificial additives"
     },
     {
       "id": 2,

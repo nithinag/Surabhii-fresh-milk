@@ -23,7 +23,7 @@ export const generateMonthlyInvoice = (customerPhone, month, year) => {
   
   doc.setFontSize(12);
   doc.setTextColor(0, 0, 0);
-  doc.text('Premium Organic Dairy', 14, 28);
+  doc.text('Premium Surabhii Dairy', 14, 28);
   doc.text('Freshness You Can Trust', 14, 34);
   
   doc.setFontSize(16);
@@ -70,7 +70,7 @@ export const generateMonthlyInvoice = (customerPhone, month, year) => {
   doc.setFontSize(8);
   doc.setTextColor(128, 128, 128);
   doc.text('Thank you for choosing Surabhii Fresh Milk!', 14, doc.internal.pageSize.height - 20);
-  doc.text('For queries, contact: +91 9600642226', 14, doc.internal.pageSize.height - 15);
+  doc.text('For queries, contact: +91 70267 69669', 14, doc.internal.pageSize.height - 15);
   
   return doc;
 };
@@ -81,9 +81,10 @@ export const downloadInvoice = (pdf) => {
   pdf.save(`Surabhii-Invoice-${month}-${year}.pdf`);
 };
 
+import { openWhatsApp } from './whatsappUtils';
+
 export const sendInvoiceViaWhatsApp = (phone, pdfBlob) => {
   const message = `Hello! Your monthly invoice is ready. Please download it from the link below.\n\nFor actual implementation, integrate with WhatsApp Business API.`;
-  const whatsappUrl = `https://wa.me/9600642226?text=${encodeURIComponent(message)}`;
-  window.open(whatsappUrl, '_blank');
+  openWhatsApp(message);
   console.log('Invoice would be sent via WhatsApp Business API in production');
 };

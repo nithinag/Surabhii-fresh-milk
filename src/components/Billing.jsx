@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getCartTotal } from '../utils/cartUtils';
+import { openWhatsApp, buildCheckoutMessage } from '../utils/whatsappUtils';
 import { 
   isFirstTimeCustomer, 
   calculateLoyaltyPoints, 
@@ -9,11 +10,22 @@ import {
 } from '../utils/loyaltyUtils';
 import { recordSale } from '../utils/salesUtils';
 import { createReturnSchedule } from '../utils/bottleReturnUtils';
+import { createDeliverySchedule } from '../utils/deliveryUtils';
+import { createInvoiceRecord, generateInvoiceId, saveInvoiceRecord } from '../utils/orderUtils';
 
-const Billing = ({ selectedMembership, cartItems, onOrderPlaced }) => {
+const Billing = ({ isOpen, onClose, selectedMembership, cartItems, onOrderPlaced }) => {
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Reset form when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setPhone('');
+      setPhoneError('');
+      setIsProcessing(false);
+    }
+  }, [isOpen]);
 
   const { subtotal, discount, total } = getCartTotal(cartItems, selectedMembership);
   const isFirstTime = phone ? isFirstTimeCustomer(phone) : false;
@@ -75,43 +87,60 @@ const Billing = ({ selectedMembership, cartItems, onOrderPlaced }) => {
       );
     }
 
-    const itemsList = cartItems.map(item => 
-      `• ${item.name} x${item.quantity} - ₹${item.price * item.quantity}`
-    ).join('\n');
+    const invoiceId = generateInvoiceId();
+    const invoice = createInvoiceRecord({
+      invoiceId,
+      phone: normalizedPhone,
+      items: cartItems,
+      subtotal,
+      discount,
+      total
+    });
+    saveInvoiceRecord(invoice);
+    const delivery = createDeliverySchedule({ invoiceId, phone: normalizedPhone, items: cartItems });
 
-    const membershipText = selectedMembership !== 'none' 
-      ? `\nMembership: ${selectedMembership.charAt(0).toUpperCase() + selectedMembership.slice(1)} Plan`
-      : '';
-
-    const message = `Hello! I would like to place an order:
-
-${itemsList}
-
-Subtotal: ₹${subtotal}
-Discount: ₹${discount}${membershipText}
-Total: ₹${total}
-Loyalty Points Earned: ${loyaltyPoints}
-
-Phone: ${phone}
-Please confirm my order.`;
-
-    const whatsappUrl = `https://wa.me/9600642226?text=${encodeURIComponent(message)}`;
+    // Build WhatsApp message with catalog links
+    const message = buildCheckoutMessage(cartItems);
     
     setTimeout(() => {
-      window.open(whatsappUrl, '_blank');
+      openWhatsApp(message);
       setIsProcessing(false);
       onOrderPlaced();
+      onClose();
     }, 500);
   };
 
+  if (!isOpen) return null;
+
   return (
-    <section id="billing" className="py-8 sm:py-12 md:py-16 lg:py-24 bg-cream min-h-screen flex items-center">
-      <div className="w-full max-w-md sm:max-w-lg md:max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-safe">
-        {/* Centered card on desktop, full-width on mobile */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-6 sm:p-8 md:p-10 w-full">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-primary-green mb-6 sm:mb-8 text-center md:text-left">
-            Order Summary
-          </h2>
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
+      
+      <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-6">
+        <div 
+          className="relative w-full max-w-md sm:max-w-lg md:max-w-2xl bg-white/90 backdrop-blur-md border border-white/70 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 animate-slide-up"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-charcoal hover:text-primary-green transition-colors p-2 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label="Close billing"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
+          <div className="w-full">
+          <div className="text-center md:text-left mb-6">
+            <span className="inline-flex items-center justify-center text-xs font-semibold text-primary-green uppercase tracking-[0.3em] bg-white/70 border border-primary-green/30 px-5 py-2 rounded-full shadow-sm">
+              Checkout
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold text-primary-green mt-4">
+              Order Summary
+            </h2>
+          </div>
 
           {/* Phone Input - Bottom-friendly on mobile */}
           <div className="mb-6 sm:mb-8">
@@ -124,7 +153,7 @@ Please confirm my order.`;
               onChange={handlePhoneChange}
               placeholder="Enter your 10-digit phone number"
               inputMode="numeric"
-              className={`w-full px-5 py-4 text-base sm:text-lg border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary-green/20 touch-manipulation bg-white text-charcoal border-gray-200 transition-all duration-200 ${
+              className={`w-full px-5 py-4 text-base sm:text-lg border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-green/20 touch-manipulation bg-white text-charcoal border-gray-200 transition-all duration-200 ${
                 phoneError ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'focus:border-primary-green'
               }`}
             />
@@ -140,10 +169,10 @@ Please confirm my order.`;
 
           {/* Items List */}
           <div className="mb-6 sm:mb-8">
-            <h3 className="font-semibold text-base sm:text-lg text-charcoal mb-4">Items:</h3>
+            <h3 className="font-semibold text-base sm:text-lg text-charcoal mb-4">Items</h3>
             <div className="space-y-3">
               {cartItems.map((item) => (
-                <div key={item.id} className="flex justify-between items-center text-sm sm:text-base text-charcoal/80 bg-cream/50 p-3 rounded-lg">
+                <div key={item.id} className="flex justify-between items-center text-sm sm:text-base text-charcoal/80 bg-white/80 border border-white/70 p-3 rounded-2xl">
                   <span className="truncate pr-2 font-medium">{item.name} x{item.quantity}</span>
                   <span className="flex-shrink-0 font-semibold">₹{item.price * item.quantity}</span>
                 </div>
@@ -152,7 +181,7 @@ Please confirm my order.`;
           </div>
 
           {/* Order Summary */}
-          <div className="border-t-2 border-gray-200 pt-4 sm:pt-6 mb-6 sm:mb-8 space-y-3">
+          <div className="border-t border-white/70 pt-4 sm:pt-6 mb-6 sm:mb-8 space-y-3">
             <div className="flex justify-between text-base sm:text-lg text-charcoal/70">
               <span>Subtotal:</span>
               <span className="font-medium">₹{subtotal}</span>
@@ -163,12 +192,12 @@ Please confirm my order.`;
                 <span className="flex-shrink-0 font-semibold">-₹{discount}</span>
               </div>
             )}
-            <div className="flex justify-between text-lg sm:text-xl md:text-2xl font-bold text-charcoal border-t-2 border-gray-200 pt-3 sm:pt-4">
+            <div className="flex justify-between text-lg sm:text-xl md:text-2xl font-bold text-charcoal border-t border-white/70 pt-3 sm:pt-4">
               <span>Total:</span>
               <span className="text-primary-green">₹{total}</span>
             </div>
             {loyaltyPoints > 0 && (
-              <div className="bg-gradient-to-r from-soft-gold/20 to-soft-gold/10 p-4 sm:p-5 rounded-xl mt-4 sm:mt-6 border border-soft-gold/30">
+              <div className="bg-gradient-to-r from-soft-gold/20 to-soft-gold/10 p-4 sm:p-5 rounded-2xl mt-4 sm:mt-6 border border-soft-gold/30">
                 <div className="flex justify-between items-center flex-wrap gap-2">
                   <span className="text-sm sm:text-base text-charcoal font-semibold">Loyalty Points Earned:</span>
                   <span className="text-2xl sm:text-3xl font-bold text-primary-green">{loyaltyPoints}</span>
@@ -186,7 +215,7 @@ Please confirm my order.`;
           <button
             onClick={handleCheckout}
             disabled={isProcessing || cartItems.length === 0 || !phone || !!phoneError}
-            className="w-full bg-primary-green hover:bg-secondary-green active:bg-secondary-green disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-4 sm:py-5 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 flex items-center justify-center gap-3 touch-manipulation min-h-[56px] shadow-lg hover:shadow-xl active:shadow-md disabled:shadow-none transform active:scale-[0.98]"
+            className="w-full bg-primary-green hover:bg-secondary-green active:bg-secondary-green disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-4 sm:py-5 rounded-full font-semibold text-base sm:text-lg transition-all duration-200 flex items-center justify-center gap-3 touch-manipulation min-h-[56px] shadow-lg hover:shadow-xl active:shadow-md disabled:shadow-none transform active:scale-[0.98]"
           >
             {isProcessing ? (
               <>
@@ -209,9 +238,10 @@ Please confirm my order.`;
           <p className="text-xs sm:text-sm text-charcoal/60 text-center mt-4 sm:mt-6">
             You'll be redirected to WhatsApp to confirm your order
           </p>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

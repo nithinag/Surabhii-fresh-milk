@@ -31,7 +31,7 @@ img {
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
+    @apply font-sans;
   }
 }
 
@@ -55,6 +55,47 @@ img {
   .fade-in-up-delay {
     animation: fade-in-up 0.6s ease-out 0.3s forwards;
     opacity: 0;
+  }
+  
+  @keyframes fade-in-up-slow {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .fade-in-up-slow {
+    animation: fade-in-up-slow 0.8s ease-out forwards;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
   }
   
   @keyframes slide-in-right {
@@ -146,6 +187,46 @@ img {
     object-position: center;
   }
   
+  /* Video playback optimizations for smooth flow */
+  video {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    will-change: opacity, transform;
+    /* Hardware acceleration for smooth playback */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    /* Smooth rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    /* Prevent video stuttering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Ensure video fits viewport exactly */
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Hero section viewport constraints */
+  section#home {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* Prevent any overflow from hero section */
+  section#home > * {
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+  
   /* Responsive text utilities */
   @media (max-width: 640px) {
     .text-responsive {
@@ -157,6 +238,8 @@ img {
   html {
     scroll-behavior: smooth;
   }
+  
+  /* Allow Tailwind scroll-mt utilities to control anchor offset */
 
   /* Prevent horizontal overflow on all sections */
   section {
@@ -212,9 +295,49 @@ img {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
   }
   
+  /* Premium shadows */
+  .shadow-premium {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shadow-premium-lg {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 15px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Glass morphism effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
   /* Better focus states for accessibility */
   *:focus-visible {
     outline: 2px solid #1F3D2B;
     outline-offset: 2px;
+  }
+  
+  /* About section card animations */
+  @keyframes card-in {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .animate-card-in {
+    animation: card-in 0.6s ease-out forwards;
   }
 }

@@ -30,12 +30,29 @@ const OrderHistory = () => {
   };
 
   return (
-    <section id="order-history" className="py-16 md:py-24 bg-cream">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="order-history" className="min-h-screen flex items-center justify-center py-10 sm:py-12 md:py-16 bg-cream">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-display font-bold text-primary-green mb-6">
-            My Orders
-          </h2>
+          <div className="text-center mb-4">
+            <button
+              onClick={() => {
+                const element = document.getElementById('order-history');
+                if (element) {
+                  const navbar = document.querySelector('nav');
+                  const navbarHeight = navbar ? navbar.offsetHeight : 80;
+                  const elementTop = element.offsetTop;
+                  const targetScroll = elementTop - navbarHeight;
+                  window.scrollTo({
+                    top: Math.max(0, targetScroll),
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="inline-block text-sm sm:text-base font-semibold text-primary-green uppercase tracking-wider bg-cream hover:bg-primary-green/10 active:bg-primary-green/20 px-4 py-2 rounded-full transition-all duration-200 cursor-pointer"
+            >
+              My Orders
+            </button>
+          </div>
 
           {!showHistory ? (
             <div className="space-y-4">

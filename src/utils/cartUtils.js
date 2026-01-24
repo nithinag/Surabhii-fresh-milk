@@ -1,32 +1,47 @@
 // Cart utility functions for managing shopping cart in localStorage
 
-const CART_STORAGE_KEY = 'surabhi_cart';
+const CART_STORAGE_KEY = 'surabhii_cart';
+
+const notifyCartUpdated = (cart) => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { cart } }));
+  }
+};
 
 export const addToCart = (product, quantity = 1) => {
-  const cart = getCart();
-  const existingItemIndex = cart.findIndex(item => item.id === product.id);
-  
-  if (existingItemIndex >= 0) {
-    cart[existingItemIndex].quantity += quantity;
-  } else {
-    cart.push({
-      ...product,
-      quantity: quantity
-    });
+  try {
+    const cart = getCart();
+    const existingItemIndex = cart.findIndex(item => item.id === product.id);
+    
+    if (existingItemIndex >= 0) {
+      cart[existingItemIndex].quantity += quantity;
+    } else {
+      // Exclude icon (React component) from product data before storing
+      const { icon, ...productData } = product;
+      cart.push({
+        ...productData,
+        quantity: quantity
+      });
+    }
+    
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    notifyCartUpdated(cart);
+    return cart;
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    return [];
   }
-  
-  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-  return cart;
 };
 
 export const removeFromCart = (productId) => {
   const cart = getCart();
   const updatedCart = cart.filter(item => item.id !== productId);
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedCart));
+  notifyCartUpdated(updatedCart);
   return updatedCart;
 };
 
-export const updateCartItemQuantity = (productId, quantity) => {
+export const updateQuantity = (productId, quantity) => {
   const cart = getCart();
   const itemIndex = cart.findIndex(item => item.id === productId);
   
@@ -36,9 +51,14 @@ export const updateCartItemQuantity = (productId, quantity) => {
     }
     cart[itemIndex].quantity = quantity;
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    notifyCartUpdated(cart);
   }
   
   return cart;
+};
+
+export const updateCartItemQuantity = (productId, quantity) => {
+  return updateQuantity(productId, quantity);
 };
 
 export const getCart = () => {
@@ -58,6 +78,7 @@ export const getCartItemCount = () => {
 
 export const clearCart = () => {
   localStorage.removeItem(CART_STORAGE_KEY);
+  notifyCartUpdated([]);
 };
 
 export const getCartTotal = (cartItems, selectedMembership = 'none') => {
