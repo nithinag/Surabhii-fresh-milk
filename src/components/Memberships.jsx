@@ -1,64 +1,46 @@
 import { useEffect, useRef, useState } from 'react';
 import { MembershipStatus, setMembershipPeriod, setMembershipStatus } from '../utils/membershipUtils';
 import { openWhatsApp } from '../utils/whatsappUtils';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../i18n/translations';
 
 const Memberships = ({ selectedMembership, onSelectMembership }) => {
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
+  
   const memberships = [
     {
       id: 'trial',
-      name: 'Trial Pack',
-      price: '20% OFF',
-      description: 'Try us for 3 days',
-      benefits: [
-        '20% discount (first-time only)',
-        '3-day trial period',
-        'Full product access',
-        'No commitment required'
-      ],
+      name: t.memberships.trial.name,
+      price: t.memberships.trial.price,
+      description: t.memberships.trial.description,
+      benefits: t.memberships.trial.benefits,
       popular: false
     },
     {
       id: 'weekly',
-      name: 'Weekly Plan',
-      price: '5% OFF',
-      description: 'Perfect for regular customers',
-      benefits: [
-        '5% discount on all orders',
-        'Weekly delivery schedule',
-        'Priority support',
-        'Loyalty points on every purchase'
-      ],
+      name: t.memberships.weekly.name,
+      price: t.memberships.weekly.price,
+      description: t.memberships.weekly.description,
+      benefits: t.memberships.weekly.benefits,
       popular: false
     },
     {
       id: 'monthly',
-      name: 'Monthly Plan',
-      price: '10% OFF',
-      description: 'Best value for families',
-      benefits: [
-        '10% discount on all orders',
-        'Monthly delivery schedule',
-        'Priority support',
-        'Extra loyalty points',
-        'Free bottle collection'
-      ],
+      name: t.memberships.monthly.name,
+      price: t.memberships.monthly.price,
+      description: t.memberships.monthly.description,
+      benefits: t.memberships.monthly.benefits,
       popular: true
     },
     {
       id: 'yearly',
-      name: 'Yearly Plan',
-      price: '15% OFF',
-      description: 'Maximum savings',
-      benefits: [
-        '15% discount on all orders',
-        'Flexible delivery schedule',
-        'Priority support',
-        'Maximum loyalty points',
-        'Free bottle collection',
-        'Exclusive products access'
-      ],
+      name: t.memberships.yearly.name,
+      price: t.memberships.yearly.price,
+      description: t.memberships.yearly.description,
+      benefits: t.memberships.yearly.benefits,
       popular: false
     }
   ];
@@ -106,11 +88,11 @@ I’d like to start a membership.${planLine}`;
               }}
               className="inline-flex items-center justify-center text-xs font-sans font-semibold text-primary-green uppercase tracking-[0.3em] bg-white/70 border border-primary-green/30 hover:border-primary-green/60 hover:text-primary-green/90 px-5 py-2 rounded-full transition-all duration-200 cursor-pointer shadow-sm"
             >
-              Memberships
+              {t.memberships.title}
             </button>
             <div className="mx-auto mt-4 h-px w-24 bg-primary-green/30"></div>
             <p className="text-sm sm:text-base text-charcoal/70 mt-4 max-w-2xl mx-auto">
-              Choose a plan that works best for you.
+              {t.memberships.subtitle}
             </p>
           </div>
 
@@ -130,7 +112,7 @@ I’d like to start a membership.${planLine}`;
               >
                 {membership.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-soft-gold text-charcoal px-4 py-1 rounded-full text-xs font-semibold shadow-md">
-                    Most Popular
+                    {t.memberships.popular}
                   </div>
                 )}
                 
@@ -160,7 +142,7 @@ I’d like to start a membership.${planLine}`;
                     ? 'bg-primary-green text-white'
                     : 'bg-cream text-charcoal'
                 }`}>
-                  {selectedMembership === membership.id ? 'Selected' : 'Select Plan'}
+                  {selectedMembership === membership.id ? 'Selected' : t.memberships.selectPlan}
                 </div>
               </div>
             ))}
@@ -171,7 +153,7 @@ I’d like to start a membership.${planLine}`;
               onClick={() => handleMembershipWhatsApp(selectedMembership !== 'none' ? selectedMembership : null)}
               className="bg-primary-green hover:bg-secondary-green active:bg-secondary-green text-white px-6 py-3 rounded-full font-semibold text-sm sm:text-base transition-all duration-200 shadow-md hover:shadow-lg min-h-[44px]"
             >
-              Start Membership on WhatsApp
+              {t.memberships.startMembership}
             </button>
           </div>
         </div>

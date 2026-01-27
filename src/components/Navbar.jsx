@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react';
 import { getCartItemCount } from '../utils/cartUtils';
 import { openWhatsApp } from '../utils/whatsappUtils';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations, languageLabels } from '../i18n/translations';
 
 const Navbar = ({ onCartClick, onFAQsClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+  const { language, changeLanguage } = useLanguage();
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -61,6 +66,22 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
     setIsMenuOpen(false);
   };
 
+  const handleLanguageChange = (lang) => {
+    changeLanguage(lang);
+    setIsLanguageDropdownOpen(false);
+  };
+
+  // Close language dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isLanguageDropdownOpen && !event.target.closest('.language-dropdown-container')) {
+        setIsLanguageDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isLanguageDropdownOpen]);
+
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-[100] w-full transition-all duration-300 ${
@@ -102,7 +123,7 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
               }`}
               style={!isScrolled ? { textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)' } : {}}
             >
-              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">Home</span>
+              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">{t.nav.home}</span>
             </button>
             <button 
               onClick={() => scrollToSection('about')} 
@@ -111,7 +132,7 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
               }`}
               style={!isScrolled ? { textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)' } : {}}
             >
-              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">About</span>
+              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">{t.nav.about}</span>
             </button>
             <button 
               onClick={() => scrollToSection('products')} 
@@ -120,7 +141,7 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
               }`}
               style={!isScrolled ? { textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)' } : {}}
             >
-              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">Products</span>
+              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">{t.nav.products}</span>
             </button>
             <button 
               onClick={() => scrollToSection('memberships')} 
@@ -129,7 +150,7 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
               }`}
               style={!isScrolled ? { textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)' } : {}}
             >
-              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">Memberships</span>
+              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">{t.nav.memberships}</span>
             </button>
             <button 
               onClick={() => scrollToSection('contact')} 
@@ -138,22 +159,124 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
               }`}
               style={!isScrolled ? { textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)' } : {}}
             >
-              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">Contact</span>
+              <span className="border-b-2 border-transparent hover:border-primary-green/60 transition-colors">{t.nav.contact}</span>
             </button>
           </div>
 
-          {/* Right Side - Call Now Button (Desktop) */}
-          <div className="hidden lg:flex items-center gap-4">
+          {/* Right Side - Language Toggle + Call Now Button (Desktop) */}
+          <div className="hidden lg:flex items-center gap-3">
+            {/* Language Toggle - Icon with Dropdown */}
+            <div className="relative language-dropdown-container">
+              <button
+                onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+                className={`relative w-10 h-10 rounded-full transition-all duration-200 flex items-center justify-center ${
+                  isScrolled
+                    ? 'bg-white/80 hover:bg-white text-charcoal'
+                    : 'bg-white/10 hover:bg-white/20 text-white'
+                } border ${
+                  isScrolled ? 'border-gray-200' : 'border-white/20'
+                } shadow-sm hover:shadow-md`}
+                aria-label="Select language"
+                aria-expanded={isLanguageDropdownOpen}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                </svg>
+              </button>
+              
+              {/* Language Dropdown */}
+              {isLanguageDropdownOpen && (
+                <div className={`absolute right-0 top-12 mt-2 w-40 rounded-lg shadow-xl border backdrop-blur-md z-50 ${
+                  isScrolled
+                    ? 'bg-white border-gray-200'
+                    : 'bg-black/90 border-white/20'
+                } overflow-hidden animate-slide-down`}>
+                  {['en', 'kn', 'hi'].map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => handleLanguageChange(lang)}
+                      className={`w-full text-left px-4 py-3 transition-colors duration-200 flex items-center gap-3 ${
+                        language === lang
+                          ? isScrolled
+                            ? 'bg-primary-green/10 text-primary-green font-semibold'
+                            : 'bg-white/10 text-white font-semibold'
+                          : isScrolled
+                          ? 'text-charcoal hover:bg-cream/50'
+                          : 'text-white/80 hover:bg-white/10'
+                      }`}
+                    >
+                      <span className="text-sm font-medium">{languageLabels[lang]}</span>
+                      {language === lang && (
+                        <svg className="w-4 h-4 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <a 
               href="tel:+917026769669"
               className="bg-primary-green hover:bg-secondary-green active:bg-secondary-green text-white px-5 py-2.5 rounded-full transition-all duration-200 font-semibold text-sm shadow-md hover:shadow-lg uppercase tracking-wide min-h-[44px] flex items-center leading-none"
             >
-              Call Now
+              {t.nav.callNow}
             </a>
           </div>
 
           {/* Mobile Menu - Right Side */}
           <div className="lg:hidden flex items-center gap-2 sm:gap-3">
+            {/* Mobile Language Toggle - Icon with Dropdown */}
+            <div className="relative language-dropdown-container">
+              <button
+                onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+                className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-full transition-all duration-200 flex items-center justify-center ${
+                  isScrolled
+                    ? 'bg-white/80 hover:bg-white text-charcoal'
+                    : 'bg-white/10 hover:bg-white/20 text-white'
+                } border ${
+                  isScrolled ? 'border-gray-200' : 'border-white/20'
+                } shadow-sm hover:shadow-md touch-manipulation`}
+                aria-label="Select language"
+                aria-expanded={isLanguageDropdownOpen}
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                </svg>
+              </button>
+              
+              {/* Mobile Language Dropdown */}
+              {isLanguageDropdownOpen && (
+                <div className={`absolute right-0 top-11 sm:top-12 mt-2 w-36 sm:w-40 rounded-lg shadow-xl border backdrop-blur-md z-50 ${
+                  isScrolled
+                    ? 'bg-white border-gray-200'
+                    : 'bg-black/90 border-white/20'
+                } overflow-hidden animate-slide-down`}>
+                  {['en', 'kn', 'hi'].map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => handleLanguageChange(lang)}
+                      className={`w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 transition-colors duration-200 flex items-center gap-3 touch-manipulation min-h-[44px] ${
+                        language === lang
+                          ? isScrolled
+                            ? 'bg-primary-green/10 text-primary-green font-semibold'
+                            : 'bg-white/10 text-white font-semibold'
+                          : isScrolled
+                          ? 'text-charcoal hover:bg-cream/50'
+                          : 'text-white/80 hover:bg-white/10'
+                      }`}
+                    >
+                      <span className="text-sm font-medium">{languageLabels[lang]}</span>
+                      {language === lang && (
+                        <svg className="w-4 h-4 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <a 
               href="tel:+917026769669" 
               className="bg-primary-green hover:bg-secondary-green active:bg-secondary-green text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-full transition-all duration-200 font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-95 touch-manipulation min-h-[40px] sm:min-h-[44px] flex items-center justify-center gap-1.5 uppercase tracking-wide whitespace-nowrap leading-none"
@@ -162,8 +285,8 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
               <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              <span className="hidden xs:inline">Call Now</span>
-              <span className="xs:hidden">Call</span>
+              <span className="hidden xs:inline">{t.nav.callNow}</span>
+              <span className="xs:hidden">{t.nav.call}</span>
             </a>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className={`p-2 touch-manipulation min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center transition-colors rounded-lg hover:bg-black/5 active:bg-black/10 ${
               isScrolled ? 'text-charcoal' : 'text-white'
@@ -190,27 +313,27 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
               isScrolled 
                 ? 'text-charcoal hover:bg-cream active:bg-cream/80' 
                 : 'text-white hover:bg-white/10 active:bg-white/20'
-            }`}>Home</button>
+            }`}>{t.nav.home}</button>
             <button onClick={() => scrollToSection('about')} className={`block w-full text-left px-4 py-3.5 text-lg font-semibold rounded-lg transition-colors touch-manipulation min-h-[48px] flex items-center ${
               isScrolled 
                 ? 'text-charcoal hover:bg-cream active:bg-cream/80' 
                 : 'text-white hover:bg-white/10 active:bg-white/20'
-            }`}>About</button>
+            }`}>{t.nav.about}</button>
             <button onClick={() => scrollToSection('products')} className={`block w-full text-left px-4 py-3.5 text-lg font-semibold rounded-lg transition-colors touch-manipulation min-h-[48px] flex items-center ${
               isScrolled 
                 ? 'text-charcoal hover:bg-cream active:bg-cream/80' 
                 : 'text-white hover:bg-white/10 active:bg-white/20'
-            }`}>Products</button>
+            }`}>{t.nav.products}</button>
             <button onClick={() => scrollToSection('memberships')} className={`block w-full text-left px-4 py-3.5 text-lg font-semibold rounded-lg transition-colors touch-manipulation min-h-[48px] flex items-center ${
               isScrolled 
                 ? 'text-charcoal hover:bg-cream active:bg-cream/80' 
                 : 'text-white hover:bg-white/10 active:bg-white/20'
-            }`}>Memberships</button>
+            }`}>{t.nav.memberships}</button>
             <button onClick={() => scrollToSection('contact')} className={`block w-full text-left px-4 py-3.5 text-lg font-semibold rounded-lg transition-colors touch-manipulation min-h-[48px] flex items-center ${
               isScrolled 
                 ? 'text-charcoal hover:bg-cream active:bg-cream/80' 
                 : 'text-white hover:bg-white/10 active:bg-white/20'
-            }`}>Contact</button>
+            }`}>{t.nav.contact}</button>
           </div>
         )}
       </div>

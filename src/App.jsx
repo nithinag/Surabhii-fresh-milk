@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import { getCart } from './utils/cartUtils';
 import { DarkModeProvider } from './contexts/DarkModeContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import './index.css';
 
 function App() {
@@ -23,9 +24,11 @@ function App() {
 
   return (
     <DarkModeProvider>
-      <div className="App">
-        <Home />
-      </div>
+      <LanguageProvider>
+        <div className="App">
+          <Home />
+        </div>
+      </LanguageProvider>
     </DarkModeProvider>
   );
 }
