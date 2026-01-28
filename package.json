@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://nithinag.github.io/Surabhii-fresh-milk.git",
+  "homepage": "https://nithinag.github.io/Surabhii-fresh-milk",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
