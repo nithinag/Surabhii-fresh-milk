@@ -134,9 +134,6 @@ const About = () => {
             {t.about.title}
           </button>
           <div className="mx-auto mt-4 h-px w-24 bg-primary-green/30"></div>
-          <p className="text-sm sm:text-base text-charcoal/70 mt-4 max-w-2xl mx-auto">
-            {t.about.subheading}
-          </p>
         </div>
 
         {/* Mobile: Stacked layout - Text first, then image */}
