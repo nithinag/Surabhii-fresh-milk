@@ -3,13 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://USERNAME.github.io/REPO",
+  "homepage": "https://nithinag.github.io/Surabhii-fresh-milk.git",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"  
   },
   "dependencies": {
     "chart.js": "^4.4.7",
