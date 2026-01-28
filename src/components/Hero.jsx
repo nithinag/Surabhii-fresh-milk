@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { openWhatsApp } from '../utils/whatsappUtils';
 import { useLanguage } from '../contexts/LanguageContext';
 import { translations } from '../i18n/translations';
+import heroVideo from '../assets/hero-video.mp4';
 
 const Hero = ({ onScrollToProducts }) => {
   const { language } = useLanguage();
@@ -251,7 +252,7 @@ Please share today’s availability and pricing.`;
               }
             }}
           >
-            <source src="/hero-video.mp4" type="video/mp4" />
+            <source src={heroVideo} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         )}

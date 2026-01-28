@@ -3,6 +3,7 @@ import { getCartItemCount } from '../utils/cartUtils';
 import { openWhatsApp } from '../utils/whatsappUtils';
 import { useLanguage } from '../contexts/LanguageContext';
 import { translations, languageLabels } from '../i18n/translations';
+import logoImage from '../assets/logo.svg';
 
 const Navbar = ({ onCartClick, onFAQsClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -100,7 +101,7 @@ const Navbar = ({ onCartClick, onFAQsClick }) => {
               aria-label="Go to homepage"
             >
               <img 
-                src="/logo.svg" 
+                src={logoImage} 
                 alt="Surabhii Fresh Milk - Premium Surabhii Cow Milk" 
                 className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] lg:max-w-[240px] object-contain"
               />

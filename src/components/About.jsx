@@ -3,6 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { translations } from '../i18n/translations';
 import deliveryBoyImage from '../assets/deliver boy.png';
 import surabhiiAdImage from '../assets/surabhii ad.png';
+import cowAboutImage from '../assets/cow-about.png';
 
 const About = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -14,7 +15,7 @@ const About = () => {
   const t = translations[language] || translations.en;
 
   const images = [
-    { src: '/cow-about.png', alt: 'Desi cows on farm', id: 'cow' },
+    { src: cowAboutImage, alt: 'Desi cows on farm', id: 'cow' },
     { src: surabhiiAdImage, alt: 'Surabhii Fresh Milk - Premium dairy products', id: 'bottle' },
     { src: deliveryBoyImage, alt: 'Morning Fresh - Delivery service', id: 'morning' }
   ];
